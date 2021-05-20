@@ -2,7 +2,7 @@
 open Lexing
 open Parser
 
-exception SytnaxError of string
+exception SyntaxError of string
 
 let next_line lexbuf =
   let pos = lexbuf.lex_curr_p in
@@ -19,14 +19,12 @@ let whitespace = [' ' '\t']+
 
 rule read =
   parse
-  | whitespace { read lexbuf }
-  | newline { next_line lexbuf; read lexbuf }
   | string {
     let str = lexeme lexbuf in
     let str_length = int_of_string (String.sub str 0 (String.length str - 1)) in
     STRING (
         if str_length = 0 then ""
-        else read_string (Buffer.create len ' ') str_length lexbuf
+        else read_string (Buffer.create str_length) (str_length - 1) lexbuf
     )
   }
   | int {
@@ -36,10 +34,15 @@ rule read =
   | 'd' { DICT_BEGIN }
   | 'l' { LIST_BEGIN }
   | 'e' { END }
-  | _ { raise (SyntaxError ("Unexpected char: " ^ lexeme lexbuf)) }
+  | whitespace { read lexbuf }
+  | newline { next_line lexbuf; read lexbuf }
+  | _ { raise (SyntaxError (
+        Printf.sprintf "Unexpected char: %s. Pos: %d"
+          (lexeme lexbuf) (lexeme_start lexbuf)
+      )) }
   | eof { EOF }
 
-rule read_string buf rem =
+and read_string buf rem =
   parse
   | _ as c {
     Buffer.add_char buf c;

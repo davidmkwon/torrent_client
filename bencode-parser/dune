@@ -1,2 +1,11 @@
-(library
-  (name bencode))
+;(library
+;  (name bencode)
+;  (modules bencode lexer parser)
+;  (libraries base stdio))
+
+(executable
+  (name test)
+  (libraries base stdio))
+
+(menhir
+  (modules parser))

@@ -1,5 +1,5 @@
 %{
-open Bencode_types
+open Types
 %}
 
 %token <int64> INT
@@ -9,7 +9,7 @@ open Bencode_types
 %token END
 %token EOF
 
-%start <Bencode_types.t option> prog
+%start <Types.t option> prog
 
 %%
 
@@ -20,11 +20,15 @@ prog:
 bencode:
   | DICT_BEGIN; d = dict; END { Dict d }
   | DICT_BEGIN; END { Dict [] }
-  | LIST_BEGIN; b = bencode; END { List b }
+  | LIST_BEGIN; b = bencodes; END { List b }
   | LIST_BEGIN; END { List [] }
   | s = STRING; {String s}
   | i = INT; { Int i }
 
+bencodes:
+  | b = bencode; bs = bencodes { b::bs }
+  | b = bencode { [b] }
+
 dict:
+  | s = STRING; b = bencode; d = dict { (s, b)::d }
   | s = STRING; b = bencode; { [(s, b)] }
-  | s = STRING;

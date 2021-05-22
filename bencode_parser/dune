@@ -1,0 +1,10 @@
+(library
+  (name bencode_parser)
+  (libraries base stdio))
+
+;(executable
+;  (name test)
+;  (libraries base stdio))
+
+(menhir
+  (modules parser))

@@ -72,17 +72,17 @@ let to_original_string =
 let as_int_exn t =
   match t with
   | Int i -> i
-  | _ -> failwith ("bencode type\n" ^ (pretty_print t) ^ "is not a dictionary")
+  | _ -> failwith ("bencode type\n" ^ (pretty_print t) ^ "is not a int")
 
 let as_string_exn t =
   match t with
   | String s -> s
-  | _ -> failwith ("bencode type\n" ^ (pretty_print t) ^ "is not a dictionary")
+  | _ -> failwith ("bencode type\n" ^ (pretty_print t) ^ "is not a string")
 
 let as_list_exn t =
   match t with
   | List l -> l
-  | _ -> failwith ("bencode type\n" ^ (pretty_print t) ^ "is not a dictionary")
+  | _ -> failwith ("bencode type\n" ^ (pretty_print t) ^ "is not a list")
 
 let as_dict_exn t =
   match t with

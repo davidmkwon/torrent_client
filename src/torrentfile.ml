@@ -67,3 +67,5 @@ let create file =
   ; length
   ; name
   }
+
+let _ = create "../test_files/test.torrent"
